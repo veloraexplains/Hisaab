@@ -1,0 +1,334 @@
+// HISAAB — REPORTS (Final Working Version)
+
+let currentTab = 'daily';
+let currentMonth = new Date();
+let currentWeekOffset = 0;
+let rangeStart = null;
+let rangeEnd = null;
+let rangeLabel = 'Today';
+
+// ============ PAGE INIT ============
+document.addEventListener("DOMContentLoaded", () => {
+  pickQuickDate(0);
+});
+
+// ============ QUICK DATE ============
+function pickQuickDate(daysAgo) {
+  const now = new Date();
+  
+  if (daysAgo === 0) {
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0).getTime();
+    rangeLabel = 'Today';
+  } else if (daysAgo === 1) {
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 0, 0, 0, 0).getTime();
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
+    rangeLabel = 'Yesterday';
+  } else {
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysAgo, 0, 0, 0, 0).getTime();
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0).getTime();
+    rangeLabel = 'Last ' + (daysAgo + 1) + ' days';
+  }
+  
+  const display = document.getElementById('selectedDateDisplay');
+  if (display) display.textContent = rangeLabel;
+  
+  renderReport();
+}
+
+function pickTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.tab === tab);
+  });
+  renderReports();
+}
+
+function prevMonth() { renderReport(); }
+function nextMonth() { renderReport(); }
+
+function openDatePicker() {
+  const picker = document.getElementById('datePicker');
+  if (!picker) return;
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  picker.value = y + '-' + m + '-' + d;
+  try {
+    if (typeof picker.showPicker === 'function') picker.showPicker();
+    else picker.click();
+  } catch (err) {
+    const input = prompt('Enter date (YYYY-MM-DD):', y + '-' + m + '-' + d);
+    if (input) {
+      picker.value = input;
+      onDateChange();
+    }
+  }
+}
+
+function onDateChange() {
+  const picker = document.getElementById('datePicker');
+  if (!picker || !picker.value) return;
+  const parts = picker.value.split('-');
+  const y = parseInt(parts[0]);
+  const m = parseInt(parts[1]) - 1;
+  const d = parseInt(parts[2]);
+  
+  rangeStart = new Date(y, m, d, 0, 0, 0, 0).getTime();
+  rangeEnd = new Date(y, m, d + 1, 0, 0, 0, 0).getTime();
+  rangeLabel = new Date(y, m, d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  
+  const display = document.getElementById('selectedDateDisplay');
+  if (display) display.textContent = rangeLabel;
+  
+  renderReport();
+}
+
+// ============ MAIN RENDER ============
+function renderReport() {
+  if (rangeStart === null) {
+    pickQuickDate(0);
+    return;
+  }
+  
+  const allEntries = Storage.getEntries();
+  const entries = allEntries.filter(e => e.date >= rangeStart && e.date < rangeEnd);
+  
+  let given = 0, got = 0;
+  const customerSet = new Set();
+  
+  entries.forEach(e => {
+    customerSet.add(e.customerId);
+    const amt = Number(e.amount);
+    if (e.type === 'gave') given += amt;
+    else got += amt;
+  });
+  
+  const net = got - given;
+  
+  document.getElementById('statCustomers').textContent = customerSet.size;
+  document.getElementById('statEntries').textContent = entries.length;
+  document.getElementById('statGiven').textContent = '₹' + fmt(given);
+  document.getElementById('statReceived').textContent = '₹' + fmt(got);
+  
+  const netEl = document.getElementById('netAmount');
+  const netSub = document.getElementById('netSub');
+  if (netEl) {
+    netEl.textContent = (net >= 0 ? '+' : '-') + '₹' + fmt(Math.abs(net));
+    netEl.style.color = net >= 0 ? '#22C55E' : '#EF4444';
+  }
+  if (netSub) {
+    if (entries.length === 0) netSub.textContent = 'No transactions in this period';
+    else if (net > 0) netSub.textContent = 'You received more than you gave';
+    else if (net < 0) netSub.textContent = 'You gave more than you received';
+    else netSub.textContent = 'Equal given and received';
+  }
+  
+  // Transactions
+  const transEl = document.getElementById('transactions');
+  if (transEl) {
+    if (entries.length === 0) {
+      transEl.innerHTML = '<div class="empty" style="padding:40px 20px"><div class="empty-icon">📝</div><div class="empty-text">No transactions</div><div class="empty-hint">in this period</div></div>';
+    } else {
+      const sorted = [...entries].sort((a, b) => b.date - a.date);
+      transEl.innerHTML = sorted.map(e => {
+        const customer = Storage.getCustomer(e.customerId);
+        const name = customer ? customer.name : 'Unknown';
+        const isGave = e.type === 'gave';
+        const icon = isGave ? '↗' : '↙';
+        const date = new Date(e.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+        return '<div class="entry-row" onclick="Router.go(\'customer\', {id:\'' + e.customerId + '\'})">' +
+          '<div class="entry-icon ' + e.type + '">' + icon + '</div>' +
+          '<div class="entry-info">' +
+          '<div class="entry-note"><strong>' + escapeHtml(name) + '</strong>' + (e.note ? ' · ' + escapeHtml(e.note) : '') + '</div>' +
+          '<div class="entry-date">' + date + '</div>' +
+          '</div>' +
+          '<div class="entry-amount ' + e.type + '">' + (isGave ? '+' : '-') + '₹' + fmt(e.amount) + '</div>' +
+          '</div>';
+      }).join('');
+    }
+  }
+  
+  // Top Debtors
+  const debtors = Storage.getCustomers()
+    .map(c => ({ customer: c, balance: Storage.getCustomerBalance(c.id) }))
+    .filter(x => x.balance > 0)
+    .sort((a, b) => b.balance - a.balance)
+    .slice(0, 5);
+  
+  const debtorsEl = document.getElementById('topDebtors');
+  if (debtorsEl) {
+    if (debtors.length === 0) {
+      debtorsEl.innerHTML = '<p class="text-muted text-center" style="padding:16px">No pending customers</p>';
+    } else {
+      debtorsEl.innerHTML = debtors.map(({ customer, balance }, i) =>
+        '<div class="customer-card" onclick="Router.go(\'customer\', {id:\'' + customer.id + '\'})">' +
+        '<div class="customer-avatar" style="background:' + avatarColor(customer.name) + ';font-size:14px">#' + (i + 1) + '</div>' +
+        '<div class="customer-info"><div class="customer-name">' + escapeHtml(customer.name) + '</div>' +
+        '<div class="customer-phone">' + (customer.phone ? '📱 ' + customer.phone : '') + '</div></div>' +
+        '<div class="customer-balance"><div class="customer-amount positive">₹' + fmt(balance) + '</div>' +
+        '<div class="customer-label">PENDING</div></div></div>'
+      ).join('');
+    }
+  }
+}
+
+// ============ REPORT PDF ============
+async function exportMonthlyPDF() {
+  alert("DEBUG_EXPORT called");
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('PDF library not loaded');
+    return;
+  }
+  if (typeof Toast !== 'undefined') Toast.show('Generating PDF...');
+  
+  try {
+    const doc = generateReportPDF();
+    const filename = 'Hisaab_Report_' + new Date().toISOString().split('T')[0] + '.pdf';
+    const result = await PDFService.saveToDevice(doc, filename);
+    if (result.success && typeof Toast !== 'undefined') {
+      Toast.show('Saved: ' + (result.path || filename));
+    }
+  } catch (err) {
+    console.error('PDF error:', err);
+    alert('PDF failed: ' + err.message);
+  }
+}
+
+async function shareMonthlyPDF() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('PDF library not loaded');
+    return;
+  }
+  if (typeof Toast !== 'undefined') Toast.show('Preparing share...');
+  
+  try {
+    const doc = generateReportPDF();
+    const filename = 'Hisaab_Report_' + new Date().toISOString().split('T')[0] + '.pdf';
+    await PDFService.shareFile(doc, filename, { name: 'Report' });
+  } catch (err) {
+    console.log('Share ended:', err.message);
+  }
+}
+
+function generateReportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const W = 210;
+  const margin = 20;
+  let y = 20;
+  
+  const entries = Storage.getEntries().filter(e => e.date >= rangeStart && e.date < rangeEnd);
+  const biz = Storage.getBusinessInfo();
+  
+  let given = 0, got = 0;
+  const customerSet = new Set();
+  entries.forEach(e => {
+    customerSet.add(e.customerId);
+    if (e.type === 'gave') given += Number(e.amount);
+    else got += Number(e.amount);
+  });
+  const net = got - given;
+  
+  doc.setFillColor(11, 107, 58);
+  doc.rect(0, 0, W, 40, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text(biz.shopName || 'HISAAB', margin, 18);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Report: ' + rangeLabel, margin, 26);
+  doc.setFontSize(10);
+  doc.text(new Date().toLocaleDateString('en-IN'), W - margin, 26, { align: 'right' });
+  y = 55;
+  
+  doc.setTextColor(15, 26, 20);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('Summary', margin, y);
+  y += 3;
+  doc.setDrawColor(200, 200, 200);
+  doc.line(margin, y, W - margin, y);
+  y += 8;
+  
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  [
+    ['Period', rangeLabel],
+    ['Active Customers', customerSet.size.toString()],
+    ['Total Entries', entries.length.toString()],
+    ['Total Given', 'Rs. ' + given.toLocaleString('en-IN')],
+    ['Total Received', 'Rs. ' + got.toLocaleString('en-IN')],
+    ['Net Change', (net >= 0 ? '+' : '-') + 'Rs. ' + Math.abs(net).toLocaleString('en-IN')]
+  ].forEach(([label, value]) => {
+    doc.text(label + ':', margin, y);
+    doc.setFont('helvetica', 'bold');
+    doc.text(value, W - margin, y, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    y += 7;
+  });
+  y += 8;
+  
+  if (entries.length > 0) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text('Transactions', margin, y);
+    y += 3;
+    doc.line(margin, y, W - margin, y);
+    y += 6;
+    
+    doc.setFillColor(240, 240, 240);
+    doc.rect(margin, y, W - 2 * margin, 8, 'F');
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    doc.text('DATE', margin + 3, y + 5.5);
+    doc.text('CUSTOMER', margin + 30, y + 5.5);
+    doc.text('NOTE', margin + 75, y + 5.5);
+    doc.text('AMOUNT', W - margin - 3, y + 5.5, { align: 'right' });
+    y += 8;
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(15, 26, 20);
+    
+    const sorted = [...entries].sort((a, b) => b.date - a.date).slice(0, 50);
+    sorted.forEach((e, i) => {
+      if (y > 265) { doc.addPage(); y = 20; }
+      if (i % 2 === 0) {
+        doc.setFillColor(250, 250, 250);
+        doc.rect(margin, y, W - 2 * margin, 6, 'F');
+      }
+      const customer = Storage.getCustomer(e.customerId);
+      const name = customer ? customer.name : 'Unknown';
+      const date = new Date(e.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+      doc.setFontSize(9);
+      doc.text(date, margin + 3, y + 4);
+      doc.text(name.substring(0, 18), margin + 30, y + 4);
+      doc.text((e.note || '').substring(0, 20), margin + 75, y + 4);
+      if (e.type === 'gave') doc.setTextColor(200, 30, 30);
+      else doc.setTextColor(20, 130, 60);
+      doc.text((e.type === 'gave' ? '+' : '-') + 'Rs.' + Number(e.amount).toLocaleString('en-IN'), W - margin - 3, y + 4, { align: 'right' });
+      doc.setTextColor(15, 26, 20);
+      y += 6;
+    });
+  }
+  
+  y += 10;
+  if (y > 270) { doc.addPage(); y = 20; }
+  doc.setDrawColor(200, 200, 200);
+  doc.line(margin, y, W - margin, y);
+  y += 8;
+  doc.setFontSize(9);
+  doc.setTextColor(120, 120, 120);
+  if (biz.shopName) { doc.text(biz.shopName, W / 2, y, { align: 'center' }); y += 5; }
+  if (biz.phone) { doc.text('Ph: +91 ' + biz.phone, W / 2, y, { align: 'center' }); y += 5; }
+  doc.text('Generated by Hisaab - ' + new Date().toLocaleString('en-IN'), W / 2, y, { align: 'center' });
+  
+  return doc;
+}
+
+// ============ HELPERS ============
+function fmt(n) { if (!n && n !== 0) return '0'; return Number(n).toLocaleString('en-IN'); }
+function escapeHtml(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function avatarColor(n) { const cols = ['#EF4444','#F59E0B','#10B981','#3B82F6','#8B5CF6','#EC4899','#06B6D4','#F97316']; if (!n) return cols[0]; let s = 0; for (let i = 0; i < n.length; i++) s += n.charCodeAt(i); return cols[s % cols.length]; }

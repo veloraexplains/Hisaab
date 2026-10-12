@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>About - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.about-hero {
+  text-align: center;
+  padding: 30px 20px 24px;
+}
+.about-logo {
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #34D399 0%, #047857 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+}
+.about-title {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+.about-tagline {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.about-version {
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.7;
+}
+.feature-block {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.feature-block h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.feature-list {
+  list-style: none;
+  padding: 0;
+}
+.feature-list li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.5;
+}
+.feature-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: 800;
+}
+.made-in {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 24px 20px;
+}
+</style>
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.back()">←</button>
+    <h1 class="brand">About</h1>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="about-hero">
+    <div class="about-logo">📒</div>
+    <div class="about-title">Hisaab</div>
+    <div class="about-tagline">Your Digital Khata</div>
+    <div class="about-version">Version 1.0.0</div>
+  </div>
+
+  <div class="feature-block">
+    <h3>🎯 What Hisaab Does</h3>
+    <ul class="feature-list">
+      <li>Track customer credit (udhar) digitally</li>
+      <li>Record "You Gave" and "You Got" entries</li>
+      <li>Add multiple items per entry (Sugar, Aata, Rice...)</li>
+      <li>See pending balance per customer</li>
+      <li>Generate professional PDF statements</li>
+      <li>QR code for instant UPI payment</li>
+      <li>Send WhatsApp reminders with UPI links</li>
+      <li>Bulk reminders to all pending customers</li>
+      <li>Reports (Today / Week / Month / Year)</li>
+      <li>Share PDF via WhatsApp, email, or print</li>
+    </ul>
+  </div>
+
+  <div class="feature-block">
+    <h3>⚡ Why Hisaab</h3>
+    <ul class="feature-list">
+      <li>100% Offline — no internet needed</li>
+      <li>Under 10 MB APK — light on storage</li>
+      <li>Free forever — no ads, no subscriptions</li>
+      <li>No login required — start instantly</li>
+      <li>5 languages (Hindi, English, Tamil, Telugu, Marathi)</li>
+      <li>Your data stays on your phone</li>
+    </ul>
+  </div>
+
+  <div class="feature-block">
+    <h3>🔒 Privacy Promise</h3>
+    <ul class="feature-list">
+      <li>No ads, ever</li>
+      <li>No tracking</li>
+      <li>No analytics</li>
+      <li>No data collection</li>
+      <li>You own your data, always</li>
+    </ul>
+  </div>
+
+  <div class="feature-block">
+    <h3>👥 Who It's For</h3>
+    <ul class="feature-list">
+      <li>Kirana and general stores</li>
+      <li>Chai stalls and food vendors</li>
+      <li>Tailors and dry cleaners</li>
+      <li>Mechanics and repair shops</li>
+      <li>Vegetable and fruit vendors</li>
+      <li>Milk sellers and small traders</li>
+      <li>Any business giving credit</li>
+    </ul>
+  </div>
+
+  <div class="made-in">
+    Made with ❤️ in India
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="settings.html" class="nav-item active"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></a>
+</nav>
+
+<script src="../js/router.js"></script>
+</body>
+</html>

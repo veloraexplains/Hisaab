@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bulk Reminders - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.go('settings')">←</button>
+    <h1 class="brand">Send Reminders</h1>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="selectAll()">✓</button>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="balance-card" id="summaryCard" style="margin-bottom:20px">
+    <div class="balance-label">TOTAL PENDING</div>
+    <div class="balance-amount" id="totalPending">₹0</div>
+    <div class="balance-sub" id="customerCount">0 customers to remind</div>
+  </div>
+
+  <div class="chips" style="margin-bottom:16px">
+    <button class="chip active" data-filter="all" onclick="filterList('all')">All Pending</button>
+    <button class="chip" data-filter="above1000" onclick="filterList('above1000')">Above ₹1000</button>
+    <button class="chip" data-filter="above500" onclick="filterList('above500')">Above ₹500</button>
+  </div>
+
+  <div id="customerList" class="recipe-list"></div>
+
+  <div style="position:fixed;bottom:100px;left:20px;right:20px;max-width:600px;margin:0 auto;z-index:60">
+    <button class="btn btn-primary btn-full" onclick="sendAllReminders()" id="sendAllBtn">
+      💬 Send to <span id="selectedCount">0</span> Selected
+    </button>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="settings.html" class="nav-item active"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></a>
+</nav>
+
+<script src="../js/services/storage.js"></script>
+<script src="../js/data/strings.js"></script>
+<script src="../js/data/strings-i18n.js"></script>
+<script src="../js/services/i18n.js"></script>
+<script src="../js/router.js"></script>
+<script src="../js/services/notify.js"></script>
+<script src="../js/services/upi.js"></script>
+<script src="../js/ui/bulk-reminder.js"></script>
+</body>
+</html>

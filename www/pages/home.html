@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F1A14">
+<title>Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand-logo"><svg width="32" height="32" viewBox="0 0 512 512"><rect x="0" y="0" width="512" height="512" rx="112" fill="#22C55E"/><rect x="140" y="120" width="232" height="300" rx="20" fill="#FFF"/><rect x="180" y="180" width="160" height="8" rx="4" fill="#22C55E"/><rect x="180" y="210" width="120" height="8" rx="4" fill="#22C55E"/><rect x="180" y="240" width="140" height="8" rx="4" fill="#22C55E"/><circle cx="380" cy="380" r="60" fill="#F59E0B"/><text x="380" y="405" font-family="Arial" font-size="70" font-weight="900" fill="#FFF" text-anchor="middle">₹</text></svg></div>
+    <h1 class="brand">Hisaab</h1>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="Router.go('settings')">⚙️</button>
+  </div>
+</header>
+
+<main class="content">
+
+  <section class="hero-section">
+    <p class="hero-greeting" id="greeting">Good Morning</p>
+    <h2 class="hero-title" id="shopNameHome">Your Khata</h2>
+  </section>
+
+  <div class="hero-balance-card">
+    <div class="hero-balance-label">Total Pending</div>
+    <div class="hero-balance-amount" id="totalPending">₹0</div>
+    <div class="hero-balance-row">
+      <div class="hero-balance-chip">👥 <span id="customerCount">0</span> customers</div>
+      <div class="hero-balance-chip" id="pendingCount">⚡ 0 pending</div>
+    </div>
+  </div>
+
+  <div class="search-bar-modern">
+    <span class="search-icon-modern">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search customers...">
+  </div>
+
+  <div id="customerList"></div>
+  <div class="section-head">
+    <h3>📊 Today's Business</h3>
+  </div>
+
+  <div class="today-card">
+    <div class="today-top">
+      <div class="today-stat-big">
+        <div class="today-stat-label">TODAY SELL</div>
+        <div class="today-stat-value" id="todaySell">₹0</div>
+        <div class="today-stat-sub" id="todaySellSub">Given today</div>
+      </div>
+      <div class="today-stat-big">
+        <div class="today-stat-label">CUSTOMERS</div>
+        <div class="today-stat-value" id="todayCustomers">0</div>
+        <div class="today-stat-sub">Visited today</div>
+      </div>
+    </div>
+
+    <div class="today-divider"></div>
+
+    <div class="today-detail-row">
+      <div class="today-icon-3d green">📦</div>
+      <div class="today-detail-info">
+        <div class="today-detail-label">Items Given</div>
+        <div class="today-detail-value" id="todayGiven">₹0</div>
+      </div>
+    </div>
+
+    <div class="today-detail-row">
+      <div class="today-icon-3d blue">💰</div>
+      <div class="today-detail-info">
+        <div class="today-detail-label">Cash Received</div>
+        <div class="today-detail-value green" id="todayReceived">₹0</div>
+      </div>
+    </div>
+
+    <div class="today-detail-row">
+      <div class="today-icon-3d orange">⚠️</div>
+      <div class="today-detail-info">
+        <div class="today-detail-label">Pending Today</div>
+        <div class="today-detail-value red" id="todayPending">₹0</div>
+      </div>
+    </div>
+
+    <a href="reports.html" class="today-report-btn">
+      📄 View Full Report →
+    </a>
+  </div>
+      <div class="daily-stat">
+        <div class="daily-label">Received</div>
+        <div class="daily-value green" id="todayGot">₹0</div>
+      </div>
+      <div class="daily-stat">
+        <div class="daily-label">Net</div>
+        <div class="daily-value" id="todayNet">₹0</div>
+      </div>
+    </div>
+    <div class="daily-sub">
+      <span id="todayEntries">0 entries</span> · 
+      <span id="todayCustomers">0 customers</span>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <h3>Recent Activity</h3>
+    <a href="recipes.html" style="display:none"></a>
+  </div>
+  <div id="recentActivity" class="recipe-list"></div>
+
+</main>
+
+<button class="fab-modern" onclick="Router.go('add-customer')">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></a>
+</nav>
+
+<script src="../js/services/storage.js"></script>
+<script src="../js/data/strings.js"></script>
+<script src="../js/data/strings-i18n.js"></script>
+<script src="../js/data/sample.js"></script>
+<script src="../js/services/i18n.js"></script>
+<script src="../js/router.js"></script>
+<script src="../js/ui/home.js"></script>
+</body>
+</html>

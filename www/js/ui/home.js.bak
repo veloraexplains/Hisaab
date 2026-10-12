@@ -1,0 +1,213 @@
+alert("DEBUG_HOME: home.js loaded");
+// HISAAB — HOME LOGIC (POLISHED)
+
+let allCustomers = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+  setGreeting();
+  loadAndRender();
+  const s = document.getElementById("searchInput");
+  if (s) s.addEventListener("input", (e) => renderCustomers(filterCustomers(e.target.value.toLowerCase().trim())));
+});
+
+function setGreeting() {
+  const h = new Date().getHours();
+  let k = "good_morning";
+  if (h >= 12 && h < 17) k = "good_afternoon";
+  else if (h >= 17) k = "good_evening";
+  const el = document.getElementById("greeting");
+  if (el) el.textContent = I18n.t(k);
+}
+
+function loadAndRender() {
+  allCustomers = Storage.getCustomers();
+  renderCustomers(allCustomers);
+  renderSummary();
+}
+
+function filterCustomers(q) {
+  if (!q) return allCustomers;
+  return allCustomers.filter(c => c.name.toLowerCase().includes(q) || (c.phone || "").includes(q));
+}
+
+function renderSummary() {
+  const total = Storage.getTotalPending();
+  const pending = allCustomers.filter(c => Storage.getCustomerBalance(c.id) > 0).length;
+  const t = document.getElementById("totalPending");
+  if (t) t.textContent = "₹" + formatAmount(total);
+  const cnt = document.getElementById("customerCount");
+  if (cnt) cnt.textContent = allCustomers.length;
+  const pc = document.getElementById("pendingCount");
+  if (pc) pc.textContent = "⚡ " + pending + " pending";
+}
+
+function renderCustomers(list) {
+  const c = document.getElementById("customerList");
+  if (!c) return;
+  if (list.length === 0) {
+    const empty = allCustomers.length === 0;
+    c.innerHTML = `<div class="empty"><div class="empty-icon">${empty ? "👥" : "🔍"}</div><div class="empty-text">${empty ? I18n.t("no_customers") : I18n.t("no_results")}</div><div class="empty-hint">${empty ? I18n.t("no_customers_hint") : ""}</div></div>`;
+    return;
+  }
+  c.innerHTML = list.map(c2 => {
+    const bal = Storage.getCustomerBalance(c2.id);
+    const cls = bal > 0 ? "positive" : bal < 0 ? "negative" : "settled";
+    const lbl = bal > 0 ? I18n.t("pending") : bal < 0 ? I18n.t("advance") : I18n.t("settled");
+    return `<div class="customer-card ${cls}" onclick="Router.go('customer', {id:'${c2.id}'})"><div class="customer-avatar" style="background:${avatarColor(c2.name)}">${initials(c2.name)}</div><div class="customer-info"><div class="customer-name">${escapeHtml(c2.name)}</div><div class="customer-phone">${c2.phone ? "📱 " + c2.phone : "No phone"}</div></div><div class="customer-balance"><div class="customer-amount ${cls}">₹${formatAmount(Math.abs(bal))}</div><div class="customer-label">${lbl}</div></div></div>`;
+  }).join("");
+}
+
+function formatAmount(n) { if (!n && n !== 0) return "0"; return Number(n).toLocaleString("en-IN"); }
+function initials(n) { if (!n) return "?"; const p = n.trim().split(" "); return ((p[0] ? p[0][0] : "") + (p[1] ? p[1][0] : "")).toUpperCase() || "?"; }
+function escapeHtml(s) { if (!s) return ""; return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function avatarColor(n) { const cols = ["#EF4444","#F59E0B","#10B981","#3B82F6","#8B5CF6","#EC4899","#06B6D4","#F97316"]; if (!n) return cols[0]; let s = 0; for (let i = 0; i < n.length; i++) s += n.charCodeAt(i); return cols[s % cols.length]; }
+
+window.addEventListener("pageshow", (e) => { if (e.persisted) loadAndRender(); });
+
+// ============ RECENT ACTIVITY FEED ============
+function renderRecentActivity() {
+  const container = document.getElementById('recentActivity');
+  if (!container) return;
+
+  const entries = Storage.getEntries()
+    .sort((a, b) => b.date - a.date)
+    .slice(0, 10);
+
+  if (entries.length === 0) {
+    container.innerHTML = '<p class="text-muted text-center" style="padding:16px">No activity yet</p>';
+    return;
+  }
+
+  container.innerHTML = entries.map(e => {
+    const customer = Storage.getCustomer(e.customerId);
+    const name = customer ? customer.name : 'Unknown';
+    const isGave = e.type === 'gave';
+    const icon = isGave ? '↗' : '↙';
+    const date = new Date(e.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+    const avatar = initials(name);
+
+    return `
+      <div class="entry-row" onclick="Router.go('customer', {id:'${e.customerId}'})">
+        <div class="entry-icon ${e.type}">${icon}</div>
+        <div class="entry-info">
+          <div class="entry-note">
+            <strong>${escapeHtml(name)}</strong>
+            ${e.note ? ' · ' + escapeHtml(e.note) : ''}
+          </div>
+          <div class="entry-date">${date}</div>
+        </div>
+        <div class="entry-amount ${e.type}">${isGave ? '+' : '-'}₹${formatAmount(e.amount)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Hook into page load
+document.addEventListener("DOMContentLoaded", () => {
+  renderRecentActivity();
+});
+
+function initials(n) { if (!n) return '?'; const p = n.trim().split(' '); return ((p[0] ? p[0][0] : '') + (p[1] ? p[1][0] : '')).toUpperCase() || '?'; }
+
+// ============ BACKUP REMINDER ============
+function checkBackupReminder() {
+  const lastBackup = Storage.getLastBackup();
+  const now = Date.now();
+  const daysSince = lastBackup ? Math.floor((now - lastBackup) / (1000 * 60 * 60 * 24)) : 999;
+  
+  // Show reminder if 30+ days no backup OR never
+  if (daysSince >= 30) {
+    showBackupBanner(daysSince);
+  }
+}
+
+function showBackupBanner(daysSince) {
+  const existing = document.getElementById('backupBanner');
+  if (existing) return;
+  
+  const banner = document.createElement('div');
+  banner.id = 'backupBanner';
+  banner.className = 'backup-banner';
+  banner.innerHTML = `
+    <div class="backup-banner-icon">💾</div>
+    <div class="backup-banner-content">
+      <div class="backup-banner-title">Backup Reminder</div>
+      <div class="backup-banner-text">
+        ${daysSince === 999 ? 'You haven\\'t backed up yet' : daysSince + ' days since last backup'}
+      </div>
+    </div>
+    <button class="backup-banner-btn" onclick="Router.go('backup')">Backup</button>
+  `;
+  
+  // Insert after balance card
+  const balanceCard = document.querySelector('.hero-balance-card') || document.querySelector('.balance-card');
+  if (balanceCard && balanceCard.parentNode) {
+    balanceCard.parentNode.insertBefore(banner, balanceCard.nextSibling);
+  }
+}
+
+// Hook into page load
+document.addEventListener("DOMContentLoaded", () => {
+  checkBackupReminder();
+});
+
+// ============ SHOP NAME ON HOME ============
+function updateHomeShopName() {
+  const el = document.getElementById('shopNameHome');
+  if (!el) return;
+  
+  const biz = Storage.getBusinessInfo();
+  if (biz && biz.shopName && biz.shopName.trim()) {
+    el.textContent = biz.shopName;
+  } else {
+    el.textContent = I18n.t('your_khata');
+  }
+}
+
+// Hook into page load
+document.addEventListener("DOMContentLoaded", () => {
+  updateHomeShopName();
+});
+
+// ============ HOME EMPTY STATE WITH ACTIONS ============
+function renderHomeEmptyState() {
+  const container = document.getElementById('customerList');
+  if (!container) return;
+  
+  const customers = Storage.getCustomers();
+  if (customers.length > 0) return; // has data, skip
+  
+  container.innerHTML = `
+    <div class="empty" style="padding:40px 20px">
+      <div class="empty-icon">📒</div>
+      <div class="empty-text">Welcome to Hisaab!</div>
+      <div class="empty-hint">Start by adding a customer or load sample data</div>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:280px;margin:24px auto 0">
+        <button class="btn btn-primary btn-full" onclick="Router.go('add-customer')">
+          + Add First Customer
+        </button>
+        <button class="btn btn-secondary btn-full" onclick="loadSampleAndRefresh()">
+          🎲 Load Sample Data
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function loadSampleAndRefresh() {
+  if (!confirm('Load 5 sample customers with entries?')) return;
+  
+  if (typeof SAMPLE_DATA === 'undefined') {
+    alert('Sample data not loaded');
+    return;
+  }
+  
+  Storage.replaceAll(SAMPLE_DATA);
+  if (typeof Toast !== 'undefined') Toast.show('Sample data loaded');
+  setTimeout(() => location.reload(), 500);
+}
+
+// Hook into DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(renderHomeEmptyState, 100);
+});

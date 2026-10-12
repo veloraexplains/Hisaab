@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Debug</title></head>
+<body style="background:#0F1A14;color:#fff;font-family:monospace;padding:20px">
+<h1 style="color:#22C55E">Date Debug</h1>
+<div id="out"></div>
+<script src="js/services/storage.js"></script>
+<script>
+var entries = Storage.getEntries();
+var now = new Date();
+var out = document.getElementById('out');
+
+var html = '<strong>Today:</strong> ' + now.toISOString() + '<br>';
+html += '<strong>Current Year:</strong> ' + now.getFullYear() + '<br><br>';
+
+html += '<strong>Entries (' + entries.length + '):</strong><br>';
+entries.forEach(function(e) {
+  var d = new Date(e.date);
+  var year = d.getFullYear();
+  var inYear = year === now.getFullYear();
+  html += '• ' + d.toISOString().split('T')[0] + ' | ' + e.type + ' ₹' + e.amount + ' | Year: ' + year + (inYear ? ' ✅' : ' ❌');
+  html += '<br>';
+});
+
+// Year total
+var yearStart = new Date(now.getFullYear(), 0, 1).getTime();
+var yearEnd = new Date(now.getFullYear() + 1, 0, 1).getTime();
+var inYear = entries.filter(function(e) { return e.date >= yearStart && e.date < yearEnd; });
+html += '<br><strong>Year ' + now.getFullYear() + ':</strong> ' + inYear.length + ' entries<br>';
+html += 'Range: ' + new Date(yearStart).toISOString() + ' to ' + new Date(yearEnd).toISOString();
+
+out.innerHTML = html;
+</script>
+</body>
+</html>

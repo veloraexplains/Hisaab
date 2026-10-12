@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>How to Use - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.step-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.step-num {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #34D399 0%, #047857 100%);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 900;
+}
+.step-content {
+  padding-left: 48px;
+}
+.step-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.step-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.step-desc strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+.tip-box-inline {
+  background: rgba(122,201,67,0.1);
+  border-left: 3px solid var(--primary);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+</style>
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.back()">←</button>
+    <h1 class="brand">How to Use</h1>
+  </div>
+</header>
+
+<main class="content">
+
+  <p style="font-size:13px;color:var(--muted);text-align:center;padding:8px 0 20px;line-height:1.5">
+    Follow these simple steps to start using Hisaab<br>— from setup to sending bills
+  </p>
+
+  <div class="step-card">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <div class="step-title">Set Up Your Shop</div>
+      <div class="step-desc">
+        Go to <strong>Settings → 🏪 Business Info</strong> and enter:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        • Shop Name<br>
+        • Owner Name<br>
+        • Phone Number<br>
+        • Address<br>
+        • UPI ID (for QR payments)<br>
+        • GSTIN (if registered)
+      </div>
+      <div class="tip-box-inline">
+        💡 This info appears on every PDF statement automatically.
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <div class="step-title">Add Your First Customer</div>
+      <div class="step-desc">
+        From home, tap the <strong>green + button</strong> at bottom-right.
+        Enter customer <strong>name</strong> and <strong>phone</strong> (optional).
+        Tap <strong>Save</strong>.
+      </div>
+      <div class="tip-box-inline">
+        💡 You can add unlimited customers. All data stays on your phone.
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <div class="step-title">Record an Entry</div>
+      <div class="step-desc">
+        Tap customer name → tap <strong>+ button</strong> → fill entry:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        <strong>You Gave</strong> — when customer takes items on credit<br>
+        <strong>You Got</strong> — when customer pays money<br>
+        <br>
+        You can fill <strong>both in one save</strong> — like when customer takes ₹100 of items and pays ₹100 cash.
+      </div>
+      <div class="tip-box-inline">
+        💡 Tap "🍬 Add Item Details" to add items (Sugar 2kg, Aata 5kg). Optional but useful.
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <div class="step-title">See Balance & Ledger</div>
+      <div class="step-desc">
+        Tap any customer to see their <strong>full ledger</strong>:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        • Red = Customer owes you<br>
+        • Green = Customer paid<br>
+        • Grey = Fully settled
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <div class="step-title">Send WhatsApp Reminders</div>
+      <div class="step-desc">
+        On customer page, tap <strong>💬</strong> to send WhatsApp reminder.
+        Message includes:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        • Your shop name<br>
+        • Customer's pending amount<br>
+        • Direct UPI payment link
+      </div>
+      <div class="tip-box-inline">
+        💡 Go to <strong>Settings → 📢 Bulk Reminders</strong> to remind ALL pending customers at once.
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">6</div>
+    <div class="step-content">
+      <div class="step-title">Generate PDF Bill / Statement</div>
+      <div class="step-desc">
+        On customer page, tap <strong>📄</strong> to generate PDF:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        • Your shop header with address + GSTIN<br>
+        • Customer name and phone<br>
+        • All items and prices<br>
+        • Payment received<br>
+        • Pending balance<br>
+        • QR code for instant UPI payment
+      </div>
+      <div class="tip-box-inline">
+        💡 The PDF shows on-screen. Tap 📤 to send via WhatsApp or email.
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">7</div>
+    <div class="step-content">
+      <div class="step-title">Check Business Reports</div>
+      <div class="step-desc">
+        Go to <strong>Settings → 📊 Reports</strong> to see:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        • Today / Yesterday / Last 7 days / Last 30 days<br>
+        • Custom date (pick any day)<br>
+        • Given, Received, Net<br>
+        • Top debtors and payers
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">8</div>
+    <div class="step-content">
+      <div class="step-title">Backup Your Data</div>
+      <div class="step-desc">
+        Very important! Go to <strong>Settings → 💾 Backup</strong> and tap <strong>Backup Now</strong> every week.
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        The backup file saves to your phone storage. Also upload it to Google Drive for safety.
+      </div>
+      <div class="tip-box-inline">
+        ⚠️ If you uninstall the app or lose your phone, you can restore from backup.
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">9</div>
+    <div class="step-content">
+      <div class="step-title">Switch Language</div>
+      <div class="step-desc">
+        Go to <strong>Settings → 🌐 Language</strong> to switch between:
+      </div>
+      <div class="step-desc" style="margin-top:8px">
+        • English<br>
+        • हिंदी<br>
+        • தமிழ்<br>
+        • తెలుగు<br>
+        • मराठी
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">10</div>
+    <div class="step-content">
+      <div class="step-title">Set PIN Lock (Optional)</div>
+      <div class="step-desc">
+        Go to <strong>Settings → 🔒 PIN Lock</strong> and set a 4-digit PIN.
+        Only you can open the app.
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box-inline" style="margin-top:20px;padding:16px;font-size:13px">
+    <strong>💡 Pro Tip:</strong> Use Hisaab every day. Add entries as they happen. Backup weekly. That's it — your khata is always up to date.
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="settings.html" class="nav-item active"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></a>
+</nav>
+
+<script src="../js/router.js"></script>
+</body>
+</html>

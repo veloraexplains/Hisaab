@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Settings - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.home()">←</button>
+    <h1 class="brand">Settings</h1>
+  </div>
+</header>
+
+<main class="content">
+
+  <!-- SHOP PROFILE CARD -->
+  <div class="shop-profile-card" onclick="Router.go('business-info')">
+    <div class="shop-avatar" id="shopAvatar">🏪</div>
+    <div class="shop-info">
+      <div class="shop-name" id="shopNameDisplay">Set up your shop</div>
+      <div class="shop-sub" id="shopSubDisplay">Tap to add shop details</div>
+    </div>
+    <div class="shop-edit-icon">✎</div>
+  </div>
+
+  <!-- LANGUAGE -->
+  <div class="settings-section">
+    <div class="settings-section-title">Language</div>
+    <div class="settings-group">
+      <div class="setting-item" onclick="pickLanguage()">
+        <div class="setting-icon-3d green">🌐</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Language</div>
+          <div class="setting-text-sub">Choose your language</div>
+        </div>
+        <span class="setting-value-text" id="langValue">English</span>
+        <span class="setting-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPEARANCE -->
+  <div class="settings-section">
+    <div class="settings-section-title">Appearance</div>
+    <div class="settings-group">
+      <div class="setting-item" onclick="toggleTheme()">
+        <div class="setting-icon-3d purple">🌙</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Dark Mode</div>
+          <div class="setting-text-sub">Easier on eyes at night</div>
+        </div>
+        <div class="premium-toggle" id="themeToggle"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="settings-section">
+    <div class="settings-section-title">Security</div>
+    <div class="settings-group">
+      <div class="setting-item" onclick="togglePinLock()">
+        <div class="setting-icon-3d blue">🔒</div>
+        <div class="setting-text">
+          <div class="setting-text-label">PIN Lock</div>
+          <div class="setting-text-sub">Protect with 4-digit PIN</div>
+        </div>
+        <div class="premium-toggle" id="pinToggle"></div>
+      </div>
+      <div class="setting-item" onclick="Router.go('backup')">
+        <div class="setting-icon-3d teal">💾</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Backup & Restore</div>
+          <div class="setting-text-sub">Save or restore your data</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUSINESS TOOLS -->
+  <div class="settings-section">
+    <div class="settings-section-title">Business Tools</div>
+    <div class="settings-group">
+      <div class="setting-item" onclick="Router.go('reports')">
+        <div class="setting-icon-3d orange">📊</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Reports</div>
+          <div class="setting-text-sub">View sales & balance summary</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+      <div class="setting-item" onclick="Router.go('bulk-reminder')">
+        <div class="setting-icon-3d red">📢</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Bulk Reminders</div>
+          <div class="setting-text-sub">Send WhatsApp to all pending</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+      <div class="setting-item" onclick="exportCSV()">
+        <div class="setting-icon-3d green">📤</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Export to CSV</div>
+          <div class="setting-text-sub">Download data as spreadsheet</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+      <div class="setting-item" onclick="shareCSV()">
+        <div class="setting-icon-3d pink">📱</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Share CSV</div>
+          <div class="setting-text-sub">Send via WhatsApp or email</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP & LEGAL -->
+  <div class="settings-section">
+    <div class="settings-section-title">Help & Legal</div>
+    <div class="settings-group">
+      <div class="setting-item" onclick="Router.go('how-to-use')">
+        <div class="setting-icon-3d blue">📖</div>
+        <div class="setting-text">
+          <div class="setting-text-label">How to Use</div>
+          <div class="setting-text-sub">Step-by-step guide</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+      <div class="setting-item" onclick="Router.go('about')">
+        <div class="setting-icon-3d purple">ℹ️</div>
+        <div class="setting-text">
+          <div class="setting-text-label">About Hisaab</div>
+          <div class="setting-text-sub">Features and privacy</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+      <div class="setting-item" onclick="Router.go('terms')">
+        <div class="setting-icon-3d gray">📜</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Terms & Conditions</div>
+          <div class="setting-text-sub">Legal and usage terms</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+      <div class="setting-item" onclick="contactSupport()">
+        <div class="setting-icon-3d orange">✉️</div>
+        <div class="setting-text">
+          <div class="setting-text-label">Contact Support</div>
+          <div class="setting-text-sub">Get help via email</div>
+        </div>
+        <span class="setting-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="settings-section">
+    <div class="settings-section-title">Data</div>
+    <div class="settings-group">
+      
+
+  <!-- APP INFO -->
+  <div class="app-info-footer">
+    <div class="app-info-logo">📒</div>
+    <div class="app-info-name">Hisaab</div>
+    <div class="app-info-version">Version 1.0.0</div>
+    <div class="app-info-made">Made with ❤️ in India</div>
+  </div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="settings.html" class="nav-item active"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></a>
+</nav>
+
+<script src="../js/services/storage.js"></script>
+<script src="../js/data/strings.js"></script>
+<script src="../js/data/strings-i18n.js"></script>
+<script src="../js/services/i18n.js"></script>
+<script src="../js/router.js"></script>
+<script src="../js/services/notify.js"></script>
+<script src="../js/services/pin.js"></script>
+<script src="../js/services/csv.js"></script>
+<script src="../js/ui/settings.js"></script>
+</body>
+</html>

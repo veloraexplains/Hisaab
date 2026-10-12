@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F1A14">
+<title>Hisaab</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #0F1A14;
+}
+
+/* ============ SPLASH ============ */
+.splash-view {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #1A2921 0%, #0F1A14 70%);
+  z-index: 100;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.splash-view.hide {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+.splash-inner {
+  text-align: center;
+  padding: 30px;
+}
+.splash-logo-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  box-shadow: 0 12px 40px rgba(16,185,129,0.35);
+  margin: 0 auto 24px;
+  display: block;
+  animation: splashPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.splash-title {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #7AC943 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textRise 0.6s ease-out 0.2s both;
+}
+.splash-sub {
+  font-size: 14px;
+  color: #9CA3AF;
+  margin-bottom: 40px;
+  animation: textRise 0.6s ease-out 0.4s both;
+}
+.splash-bar {
+  width: 200px;
+  height: 4px;
+  background: #1A2921;
+  border-radius: 4px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #5FA32E, #7AC943);
+  border-radius: 4px;
+  animation: loadBar 1.8s ease-out forwards;
+}
+@keyframes loadBar { 0%{width:0%} 60%{width:70%} 100%{width:100%} }
+@keyframes splashPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes textRise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ PIN LOCK SCREEN ============ */
+.pin-view {
+  position: fixed;
+  inset: 0;
+  background: #0F1A14;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 20px 40px;
+  z-index: 200;
+}
+.pin-view.show { display: flex; }
+
+.pin-top {
+  text-align: center;
+  padding-top: 20px;
+}
+.pin-lock-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #22C55E 0%, #15803D 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 32px rgba(16,185,129,0.3);
+}
+.pin-lock-icon svg {
+  width: 36px;
+  height: 36px;
+}
+.pin-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.pin-subtitle {
+  font-size: 14px;
+  color: #9CA3AF;
+  line-height: 1.5;
+}
+.pin-subtitle.error {
+  color: #EF4444;
+  animation: shake 0.4s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* Dots */
+.pin-display {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+.pin-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2.5px solid #2A3B32;
+  background: transparent;
+  transition: all 0.15s;
+}
+.pin-dot.filled {
+  background: #22C55E;
+  border-color: #22C55E;
+  transform: scale(1.15);
+}
+
+/* Keypad */
+.pin-pad-wrap {
+  width: 100%;
+  max-width: 340px;
+}
+.pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.pin-key {
+  aspect-ratio: 1;
+  background: #1A2921;
+  border: 1.5px solid #2A3B32;
+  border-radius: 50%;
+  color: #FFFFFF;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s;
+  user-select: none;
+  padding: 0;
+  font-family: inherit;
+}
+.pin-key:active {
+  background: #22C55E;
+  border-color: #22C55E;
+  transform: scale(0.95);
+}
+.pin-key.empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+.pin-key.delete svg {
+  width: 28px;
+  height: 28px;
+}
+
+.pin-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 12px;
+}
+.pin-footer a {
+  color: #22C55E;
+  text-decoration: none;
+  font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash-view" id="splashView">
+  <div class="splash-inner">
+    <img src="assets/icons/icon-192.png" alt="Hisaab" class="splash-logo-img" onerror="this.style.display='none';document.getElementById('splashFallback').style.display='block'">
+    <div id="splashFallback" style="display:none;font-size:72px;margin-bottom:24px">📒</div>
+    <div class="splash-title">Hisaab</div>
+    <div class="splash-sub">Your Digital Khata</div>
+    <div class="splash-bar">
+      <div class="splash-bar-fill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PIN LOCK -->
+<div class="pin-view" id="pinView">
+  <div class="pin-top">
+    <div class="pin-lock-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <div class="pin-title" id="pinTitle">Enter PIN</div>
+    <div class="pin-subtitle" id="pinSubtitle">Enter your 4-digit PIN to unlock</div>
+    <div class="pin-display">
+      <div class="pin-dot" data-slot="1"></div>
+      <div class="pin-dot" data-slot="2"></div>
+      <div class="pin-dot" data-slot="3"></div>
+      <div class="pin-dot" data-slot="4"></div>
+    </div>
+  </div>
+
+  <div class="pin-pad-wrap">
+    <div class="pin-pad">
+      <button class="pin-key" data-key="1">1</button>
+      <button class="pin-key" data-key="2">2</button>
+      <button class="pin-key" data-key="3">3</button>
+      <button class="pin-key" data-key="4">4</button>
+      <button class="pin-key" data-key="5">5</button>
+      <button class="pin-key" data-key="6">6</button>
+      <button class="pin-key" data-key="7">7</button>
+      <button class="pin-key" data-key="8">8</button>
+      <button class="pin-key" data-key="9">9</button>
+      <button class="pin-key empty"></button>
+      <button class="pin-key" data-key="0">0</button>
+      <button class="pin-key delete" data-key="del">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+          <line x1="18" y1="9" x2="12" y2="15"/>
+          <line x1="12" y1="9" x2="18" y2="15"/>
+        </svg>
+      </button>
+    </div>
+    <div class="pin-footer">
+      Forgot PIN? Reset via Settings
+    </div>
+  </div>
+</div>
+
+<script src="js/services/storage.js"></script>
+<script>
+var enteredPin = '';
+var expectedPin = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Show splash for 1.8 seconds
+  setTimeout(function() {
+    var savedPin = Storage.getPin();
+    
+    if (savedPin) {
+      // PIN is set → show PIN lock
+      expectedPin = savedPin;
+      document.getElementById('splashView').classList.add('hide');
+      setTimeout(function() {
+        document.getElementById('pinView').classList.add('show');
+      }, 300);
+    } else {
+      // No PIN set → go to home
+      window.location.href = 'pages/home.html';
+    }
+  }, 1800);
+  
+  // Keypad
+  document.querySelectorAll('.pin-key').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var key = btn.dataset.key;
+      if (!key) return;
+      
+      if (key === 'del') {
+        if (enteredPin.length > 0) {
+          enteredPin = enteredPin.slice(0, -1);
+        }
+      } else if (enteredPin.length < 4) {
+        enteredPin += key;
+      }
+      
+      renderDots();
+      
+      if (enteredPin.length === 4) {
+        setTimeout(validatePin, 180);
+      }
+    });
+  });
+});
+
+function renderDots() {
+  document.querySelectorAll('.pin-dot').forEach(function(dot, i) {
+    dot.classList.toggle('filled', i < enteredPin.length);
+  });
+}
+
+function validatePin() {
+  if (enteredPin === expectedPin) {
+    // Correct PIN
+    if (navigator.vibrate) navigator.vibrate(30);
+    window.location.href = 'pages/home.html';
+  } else {
+    // Wrong PIN
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+    var sub = document.getElementById('pinSubtitle');
+    sub.textContent = 'Wrong PIN. Try again.';
+    sub.classList.add('error');
+    
+    setTimeout(function() {
+      enteredPin = '';
+      renderDots();
+      sub.textContent = 'Enter your 4-digit PIN to unlock';
+      sub.classList.remove('error');
+    }, 1200);
+  }
+}
+</script>
+</body>
+</html>

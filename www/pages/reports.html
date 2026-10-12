@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Reports - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.home()">←</button>
+    <h1 class="brand">Reports</h1>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="exportMonthlyPDF()">📄</button>
+    <button class="icon-btn" onclick="shareMonthlyPDF()">📤</button>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="date-picker-card" onclick="document.getElementById('datePicker').click()">
+    <div class="date-picker-icon">📅</div>
+    <div class="date-picker-content">
+      <div class="date-picker-label">SHOWING</div>
+      <div class="date-picker-date" id="selectedDateDisplay">Today</div>
+    </div>
+    <div class="date-picker-arrow">›</div>
+  </div>
+
+  <div class="quick-dates">
+    <button class="quick-date-btn" onclick="pickQuickDate(0)">Today</button>
+    <button class="quick-date-btn" onclick="pickQuickDate(1)">Yesterday</button>
+    <button class="quick-date-btn" onclick="pickQuickDate(6)">Last 7 days</button>
+    <button class="quick-date-btn" onclick="pickQuickDate(29)">Last 30 days</button>
+  </div>
+
+  <div class="custom-date-row">
+    <label class="custom-date-label">📅 Or pick a specific date:</label>
+    <input type="date" id="datePicker" class="custom-date-input" onchange="onDateChange()">
+  </div>
+
+  <div class="report-summary">
+    <div class="report-stat"><div class="report-stat-num" id="statCustomers">0</div><div class="report-stat-lbl">Customers</div></div>
+    <div class="report-stat"><div class="report-stat-num" id="statEntries">0</div><div class="report-stat-lbl">Entries</div></div>
+    <div class="report-stat"><div class="report-stat-num" id="statGiven" style="color:#EF4444">₹0</div><div class="report-stat-lbl">Given</div></div>
+    <div class="report-stat"><div class="report-stat-num" id="statReceived" style="color:#22C55E">₹0</div><div class="report-stat-lbl">Received</div></div>
+  </div>
+
+  <div class="net-card">
+    <div class="net-label">Net Position</div>
+    <div class="net-amount" id="netAmount">+₹0</div>
+    <div class="net-sub" id="netSub">No transactions</div>
+  </div>
+
+  <h3 class="section-title mt-lg">Transactions</h3>
+  <div id="transactions" class="recipe-list"></div>
+
+  <h3 class="section-title mt-lg">Top Debtors</h3>
+  <div id="topDebtors" class="recipe-list"></div>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="home.html" class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+  <a href="settings.html" class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></a>
+</nav>
+
+<script src="../js/lib/jspdf.min.js"></script>
+<script src="../js/services/storage.js"></script>
+<script src="../js/data/strings.js"></script>
+<script src="../js/data/strings-i18n.js"></script>
+<script src="../js/services/i18n.js"></script>
+<script src="../js/router.js"></script>
+<script src="../js/services/notify.js"></script>
+<script src="../js/services/pdf.js"></script>
+<script src="../js/services/qr.js"></script>
+<script src="../js/ui/reports.js"></script>
+</body>
+</html>

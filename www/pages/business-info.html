@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Business Info - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.go('settings')">←</button>
+    <h1 class="brand" data-i18n="business_info">Business Info</h1>
+  </div>
+</header>
+
+<main class="content">
+
+  <p class="text-muted text-sm mb-lg" data-i18n="business_hint">Shown on PDF statements</p>
+
+  <div class="field">
+    <label class="field-label" data-i18n="shop_name">Shop Name</label>
+    <input type="text" id="shopName" class="input" placeholder="e.g. Kumar General Store" maxlength="60">
+  </div>
+
+  <div class="field">
+    <label class="field-label" data-i18n="owner_name">Owner Name</label>
+    <input type="text" id="ownerName" class="input" placeholder="e.g. Ramesh Kumar" maxlength="50">
+  </div>
+
+  <div class="field">
+    <label class="field-label" data-i18n="business_phone">Business Phone</label>
+    <input type="tel" id="bizPhone" class="input" placeholder="9876543210" maxlength="10" inputmode="numeric">
+  </div>
+
+  <div class="field">
+    <label class="field-label" data-i18n="business_address">Address</label>
+    <input type="text" id="bizAddress" class="input" placeholder="Main Bazaar, Delhi" maxlength="100">
+  </div>
+
+  <div class="field">
+    <label class="field-label" data-i18n="upi_id">UPI ID</label>
+    <input type="text" id="bizUpi" class="input" placeholder="ramesh@paytm" maxlength="50" autocapitalize="off">
+  </div>
+
+  <div class="field">
+    <label class="field-label" data-i18n="gstin">GSTIN (optional)</label>
+    <input type="text" id="bizGstin" class="input" placeholder="22AAAAA0000A1Z5" maxlength="15" autocapitalize="characters">
+  </div>
+
+  <button class="btn btn-primary btn-full mt-lg" onclick="saveBusiness()" data-i18n="save_business">Save</button>
+
+</main>
+
+<script src="../js/services/storage.js"></script>
+<script src="../js/data/strings.js"></script>
+<script src="../js/data/strings-i18n.js"></script>
+<script src="../js/services/i18n.js"></script>
+<script src="../js/router.js"></script>
+<script src="../js/services/notify.js"></script>
+<script src="../js/ui/business-info.js"></script>
+</body>
+</html>

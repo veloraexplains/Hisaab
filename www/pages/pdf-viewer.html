@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF</title>
+<style>
+body{margin:0;background:#222;overflow-x:hidden}
+.bar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#0F1A14;border-bottom:1px solid #2A3B32;position:fixed;top:0;left:0;right:0;z-index:100}
+.bar button{background:none;color:#fff;border:none;font-size:20px;padding:8px;cursor:pointer}
+.bar h1{font-size:14px;color:#fff;margin:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.page{margin-top:70px;padding:8px;display:flex;flex-direction:column;align-items:center}
+.page canvas{background:#fff;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.5);max-width:100%;height:auto}
+.status{color:#fff;text-align:center;padding:60px 20px;font-size:14px;line-height:1.6}
+.status button{background:#22C55E;color:#fff;border:none;padding:14px 28px;border-radius:24px;font-size:14px;font-weight:700;margin-top:16px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <button onclick="window.history.back()">←</button>
+  <h1 id="ttl">PDF</h1>
+  <button onclick="shareIt()">📤</button>
+</div>
+
+<div class="page" id="page"></div>
+<div class="status" id="status">Loading...</div>
+
+<script src="../js/router.js"></script>
+<script src="../js/lib/pdf.min.js"></script>
+<script>
+var fileUri = '';
+var fileName = '';
+
+function show(msg) {
+  document.getElementById('status').innerHTML = msg;
+  document.getElementById('status').style.display = 'block';
+}
+function hide() {
+  document.getElementById('status').style.display = 'none';
+}
+
+function shareIt() {
+  if (!fileUri) return;
+  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
+    window.Capacitor.Plugins.Share.share({ title: 'PDF', text: fileName, url: fileUri, dialogTitle: 'Share PDF' });
+  }
+}
+
+async function loadPdf() {
+  var p = new URLSearchParams(window.location.search);
+  fileUri = decodeURIComponent(p.get('uri') || '');
+  fileName = decodeURIComponent(p.get('name') || 'PDF');
+  document.getElementById('ttl').textContent = fileName;
+
+  if (!fileUri) {
+    show('No PDF specified');
+    return;
+  }
+
+  if (typeof pdfjsLib === 'undefined') {
+    show('PDF library not loaded<br><br><button onclick="shareIt()">📤 Open in External App</button>');
+    return;
+  }
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '../js/lib/pdf.worker.min.js';
+
+  var displayUri = fileUri;
+  if (window.Capacitor && window.Capacitor.convertFileSrc) {
+    displayUri = window.Capacitor.convertFileSrc(fileUri);
+  }
+
+  try {
+    var task = pdfjsLib.getDocument(displayUri);
+    var pdf = await task.promise;
+    hide();
+    var pageEl = document.getElementById('page');
+    for (var i = 1; i <= pdf.numPages; i++) {
+      var page = await pdf.getPage(i);
+      var vp = page.getViewport({ scale: 1.5 });
+      var cv = document.createElement('canvas');
+      cv.width = vp.width;
+      cv.height = vp.height;
+      cv.style.width = '100%';
+      pageEl.appendChild(cv);
+      await page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+    }
+  } catch (e) {
+    show('Cannot display PDF: ' + e.message + '<br><br><button onclick="shareIt()">📤 Open in External App</button>');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadPdf);
+</script>
+</body>
+</html>

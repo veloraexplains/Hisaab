@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Backup - Hisaab</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" onclick="Router.go('settings')">←</button>
+    <h1 class="brand" data-i18n="backup_title">Backup & Restore</h1>
+  </div>
+</header>
+
+<main class="content">
+
+  <div class="card mb-lg">
+    <div style="font-size:40px;text-align:center;margin-bottom:12px">💾</div>
+    <h3 class="text-center mb-sm" data-i18n="backup">Backup</h3>
+    <p class="text-center text-muted text-sm mb-md" data-i18n="backup_desc">Save your data to a file so you never lose it.</p>
+    <button class="btn btn-primary btn-full" id="backupBtn">
+      📥 <span data-i18n="backup_now">Backup Now</span>
+    </button>
+    <p class="text-center text-muted text-xs mt-md">
+      <span data-i18n="last_backup">Last backup</span>: <span id="lastBackup">Never</span>
+    </p>
+  </div>
+
+  <div class="card">
+    <div style="font-size:40px;text-align:center;margin-bottom:12px">📤</div>
+    <h3 class="text-center mb-sm" data-i18n="restore">Restore</h3>
+    <p class="text-center text-muted text-sm mb-md" data-i18n="restore_desc">Restore data from a backup file</p>
+    <input type="file" id="fileInput" accept=".json,application/json" style="display:none">
+    <button class="btn btn-secondary btn-full" id="restoreBtn">
+      📤 <span data-i18n="restore">Restore</span>
+    </button>
+  </div>
+
+  <div class="card mt-lg" style="background:var(--bg-elevated)">
+    <p class="text-muted text-sm">
+      ℹ️ <span data-i18n="backup_desc">Your backup file stays on your phone. We never upload anything.</span>
+    </p>
+  </div>
+
+</main>
+
+<script src="../js/services/storage.js"></script>
+<script src="../js/data/strings.js"></script>
+<script src="../js/data/strings-i18n.js"></script>
+<script src="../js/services/i18n.js"></script>
+<script src="../js/router.js"></script>
+<script src="../js/services/notify.js"></script>
+<script src="../js/services/backup.js"></script>
+</body>
+</html>
