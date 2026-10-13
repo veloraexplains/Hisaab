@@ -20,8 +20,8 @@ Replace your paper khata with a fast, private, and reliable digital version.
 
 **Hisaab is different:**
 - ✅ 100% Offline — no internet needed, ever
-- ✅ Tiny APK (~5 MB)
-- ✅ Hindi + English
+- ✅ Tiny APK Under  (10~MB)
+- ✅ Hindi + English + 4 More languages 
 - ✅ Zero commissions
 - ✅ No login, no ads, no tracking
 
@@ -57,15 +57,14 @@ Replace your paper khata with a fast, private, and reliable digital version.
 ## Platform
 
 - **Android** (via Capacitor)
-- **APK size:** ~5 MB
+- **APK size:** ~10 MB
 - **Minimum Android:** 6.0
 
 ---
 
 ## Status
 
-🚧 **In Development — V1 planning phase**
-
+🚧 ** COMPLETED **
 ---
 
 ## License
