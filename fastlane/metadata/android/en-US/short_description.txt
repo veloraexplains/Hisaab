@@ -1,0 +1,1 @@
+Offline customer ledger app for small businesses. No internet.

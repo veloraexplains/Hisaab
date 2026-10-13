@@ -1,0 +1,42 @@
+Hisaab is a completely offline customer ledger (khata book) app designed
+for small business owners — kirana stores, chai stalls, tailors, mechanics,
+and anyone who gives credit to customers.
+
+Replace your paper khata with a fast, private, and reliable digital version.
+
+WHY HISAAB?
+- 100% offline — no internet needed, ever
+- Tiny APK (under 10 MB)
+- Hindi + English + 4 more languages
+- Zero commissions
+- No login, no ads, no tracking
+
+CORE FEATURES
+- Add customers with name and phone
+- Record credit ("You gave" / उधार दिया) and payment ("You got" / भुगतान मिला)
+- See full ledger per customer
+- View total pending amount
+- Send WhatsApp/SMS reminders
+- Export and backup data to your phone
+- PIN lock for privacy
+- Hindi + English toggle
+- Search customers
+- Works offline always
+
+TARGET USERS
+- Kirana store owners
+- Chai stalls and small food vendors
+- Tailors and dry cleaners
+- Mechanics and repair shops
+- Vegetable and fruit vendors
+- Milk sellers
+- Any small business giving credit
+
+PRIVACY
+The app requests ZERO internet permissions and works 100% offline.
+No ads. No tracking. No accounts.
+
+LICENSE
+MIT — free for personal and commercial use.
+
+Source code: https://github.com/veloraexplains/Hisaab
